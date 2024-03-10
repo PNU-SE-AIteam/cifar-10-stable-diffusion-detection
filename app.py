@@ -20,7 +20,9 @@ def preprocess_image(uploaded_file):
     return img_array
 
 st.title('Cifar 10 Image Classifier')
-
+st.markdown("""
+This model distinguishes between real images and AI-generated ones. It was trained on the CIFAR-10 dataset, a collection of 60,000 32x32 color images in 10 classes, with 6,000 images per class.
+""", style={'font-size': '12px'})
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png"])
 
 if uploaded_file is not None:
@@ -29,7 +31,7 @@ if uploaded_file is not None:
         prediction = model.predict(img_array)
         
 
-        probability = prediction[0][0]
+        probability = prediction
         st.write(f"The model predicts the probability of the image being real: {probability:.3f}")
     else:
         st.error("Please upload a JPEG or PNG image.")

@@ -30,6 +30,10 @@ if uploaded_file is not None:
         
 
         probability = prediction[0][0]
-        st.write(f"The model predicts the probability of the image being real: {probability:.3f}")
+        if probability > 0.5:
+            st.write(f"The image IS real.")
+        else:
+            st.write(f"The image is AI-generated.")
+        
     else:
         st.error("Please upload a JPEG or PNG image.")

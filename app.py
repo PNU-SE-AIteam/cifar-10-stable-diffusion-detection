@@ -5,7 +5,7 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 
 # Load the model
-model = load_model('BESTcifakeCNN20240309-132543.keras')
+model = load_model('BESTcifakeCNN20240303.keras')
 
 def preprocess_image(uploaded_file):
 
@@ -20,8 +20,8 @@ def preprocess_image(uploaded_file):
     return img_array
 
 st.title('Cifar 10 Image Classifier')
-st.text("This model distinguishes between real images and AI-generated ones. It was trained on the CIFAR-10 dataset (32x32 pixel RGB images).")
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png"])
+st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAR-10 dataset (60,000 32x32 RGB images)")
+uploaded_file = st.file_uploader("Choose an image to evaluate...", type=["jpg", "png"])
 
 if uploaded_file is not None:
     if uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/png":
@@ -29,7 +29,7 @@ if uploaded_file is not None:
         prediction = model.predict(img_array)
         
 
-        probability = prediction
+        probability = prediction[0][0]
         st.write(f"The model predicts the probability of the image being real: {probability:.3f}")
     else:
         st.error("Please upload a JPEG or PNG image.")

@@ -20,9 +20,7 @@ def preprocess_image(uploaded_file):
     return img_array
 
 st.title('Cifar 10 Image Classifier')
-st.markdown("""
-This model distinguishes between real images and AI-generated ones. It was trained on the CIFAR-10 dataset, a collection of 60,000 32x32 color images in 10 classes, with 6,000 images per class.
-""", style={'font-size': '12px'})
+st.text("This model distinguishes between real images and AI-generated ones. It was trained on the CIFAR-10 dataset (32x32 pixel RGB images).")
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png"])
 
 if uploaded_file is not None:

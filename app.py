@@ -16,24 +16,23 @@ def preprocess_image(uploaded_file):
     img_array = tf.image.convert_image_dtype(img_array, dtype=tf.float32)
     img_array = np.expand_dims(img_array, axis=0)
     return img_array, img 
-    
+
 st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10)")
-uploaded_file = st.file_uploader("Choose an image to evaluate...", type=["jpg", "png"])
+uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
 
-if uploaded_file is not None:
-    if uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/png":
-        img_array, img = preprocess_image(uploaded_file) # Unpack the returned values
-        prediction = model.predict(img_array)
-        
-        probability = prediction[0][0]
-        if probability > 0.5:
-            st.write(f"The image IS real.")
+if uploaded_files is not None:
+    for uploaded_file in uploaded_files:
+        if uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/png":
+            img_array, img = preprocess_image(uploaded_file) # Unpack the returned values
+            prediction = model.predict(img_array)
+            
+            probability = prediction[0][0]
+            if probability > 0.5:
+                st.write(f"The image IS real.")
+            else:
+                st.write(f"The image is AI-generated.")
+            
+            st.image(img, caption="32x32 Image", width=100)
         else:
-            st.write(f"The image is AI-generated.")
-        
-        
-        st.image(img, caption="32x32 Image", width=100)
-        
-    else:
-        st.error("Please upload a JPEG or PNG image.")
+            st.error("Please upload JPEG or PNG images.")

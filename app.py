@@ -21,24 +21,18 @@ st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10)")
 uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
 
-
-output_placeholder = st.empty()
-
 if uploaded_files is not None:
-    # clear the output placeholder before processing new files
-    output_placeholder.empty()
-    
     for uploaded_file in uploaded_files:
         if uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/png":
-            img_array, img = preprocess_image(uploaded_file) 
+            img_array, img = preprocess_image(uploaded_file)
             prediction = model.predict(img_array)
             
             probability = prediction[0][0]
             if probability > 0.5:
-                output_placeholder.write(f"The image IS real.")
+                st.write(f"The image IS real.")
             else:
-                output_placeholder.write(f"The image is AI-generated.")
+                st.write(f"The image is AI-generated.")
             
-            output_placeholder.image(img, caption="32x32 Image", width=100)
+            st.image(img, caption="32x32 Image", width=100)
         else:
-            output_placeholder.error("Please upload JPEG or PNG images.")
+            st.error("Please upload JPEG or PNG images.")

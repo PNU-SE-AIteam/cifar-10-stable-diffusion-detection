@@ -32,8 +32,12 @@ if uploaded_file is not None:
         else:
             st.write(f"The image is AI-generated.")
         
+        # Ensure the image data is in the correct range and format
+        img_array = tf.clip_by_value(img_array, 0.0, 1.0) # Clip values to [0.0, 1.0]
+        img_array = tf.squeeze(img_array, axis=0) # Remove the batch dimension
+        
         # Display the 32x32 version of the uploaded image
-        st.image(img_array[0], caption="32x32 version of the uploaded image", use_column_width=True)
+        st.image(img_array, caption="32x32 version of the uploaded image", use_column_width=True)
         
     else:
         st.error("Please upload a JPEG or PNG image.")

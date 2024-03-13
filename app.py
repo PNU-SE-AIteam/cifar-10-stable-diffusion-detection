@@ -8,9 +8,7 @@ import numpy as np
 model = load_model('BESTcifakeCNN20240303.keras')
 
 def preprocess_image(uploaded_file):
-
     img = image.load_img(uploaded_file, target_size=(32, 32))
-
     img_array = image.img_to_array(img)
     # if alpha channel, ignore it
     if img_array.shape[-1] == 4: 
@@ -19,8 +17,8 @@ def preprocess_image(uploaded_file):
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
-st.title('Cifar 10 Image Classifier')
-st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAR-10 dataset (60,000 32x32 RGB images)")
+st.title('CIFAR-10 Image Classifier')
+st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 stable-diffusion-generated and 60,000 real 32x32 RGB images collected from CIFAR-10)")
 uploaded_file = st.file_uploader("Choose an image to evaluate...", type=["jpg", "png"])
 
 if uploaded_file is not None:
@@ -28,12 +26,14 @@ if uploaded_file is not None:
         img_array = preprocess_image(uploaded_file)
         prediction = model.predict(img_array)
         
-
         probability = prediction[0][0]
         if probability > 0.5:
             st.write(f"The image IS real.")
         else:
             st.write(f"The image is AI-generated.")
+        
+        # Display the 32x32 version of the uploaded image
+        st.image(img_array[0], caption="32x32 version of the uploaded image", use_column_width=True)
         
     else:
         st.error("Please upload a JPEG or PNG image.")

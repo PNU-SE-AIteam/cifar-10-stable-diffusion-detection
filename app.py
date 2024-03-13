@@ -29,9 +29,9 @@ if uploaded_files is not None:
             
             probability = prediction[0][0]
             if probability > 0.5:
-                st.write(f"The image IS real.")
+                st.write(f"The image below IS real.")
             else:
-                st.write(f"The image is AI-generated.")
+                st.write(f"The image below is AI-generated.")
             
             st.image(img, caption="32x32 Image", width=100)
         else:

@@ -8,13 +8,17 @@ import numpy as np
 model = load_model('BESTcifakeCNN20240303.keras')
 
 def preprocess_image(uploaded_file):
+    # Load the image and resize it to 32x32
     img = image.load_img(uploaded_file, target_size=(32, 32))
+    
+    # Convert the image to an array
     img_array = image.img_to_array(img)
     # if alpha channel, ignore it
     if img_array.shape[-1] == 4: 
         img_array = img_array[:, :, :3] 
     img_array = tf.image.convert_image_dtype(img_array, dtype=tf.float32)
     img_array = np.expand_dims(img_array, axis=0)
+    
     return img_array
 
 st.title('CIFAR-10 Image Classifier')
@@ -32,12 +36,8 @@ if uploaded_file is not None:
         else:
             st.write(f"The image is AI-generated.")
         
-        # Ensure the image data is in the correct range and format
-        img_array = tf.clip_by_value(img_array, 0.0, 1.0) # Clip values to [0.0, 1.0]
-        img_array = tf.squeeze(img_array, axis=0) # Remove the batch dimension
-        
-        # Display the 32x32 version of the uploaded image
-        st.image(img_array, caption="32x32 version of the uploaded image", use_column_width=True)
+        # Display the 32x32 version of the image
+        st.image(uploaded_file, caption="32x32 Version of the Uploaded Image", use_column_width=True)
         
     else:
         st.error("Please upload a JPEG or PNG image.")

@@ -3,9 +3,9 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
-import PIL.Image # Import PIL to convert NumPy array to image
+import PIL.Image
 
-# Load the model
+
 model = load_model('BESTcifakeCNN20240303.keras')
 
 def preprocess_image(uploaded_file):
@@ -36,11 +36,11 @@ if uploaded_file is not None:
             st.write(f"The image IS real.")
         else:
             st.write(f"The image is AI-generated.")
-        
-        #image array back to an image format
-        img_array = img_array.squeeze() # remove batch
+
+        img_array = img_array.squeeze() 
         img_array = (img_array * 255).astype(np.uint8) 
-        img = PIL.Image.fromarray(img_array) # NumPy to PIL Image
+        img = PIL.Image.fromarray(img_array, 'RGB')
+        
         
         st.image(img, caption="32x32 Version of the Uploaded Image", use_column_width=True)
         

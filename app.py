@@ -33,7 +33,7 @@ if uploaded_file is not None:
             st.write(f"The image is AI-generated.")
         
         
-        st.image(img, caption="32x32 Image", use_column_width=True)
+        st.image(img, caption="32x32 Image", width=100)
         
     else:
         st.error("Please upload a JPEG or PNG image.")

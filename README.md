@@ -42,3 +42,6 @@ The script outputs the summary of the best performing model and saves it to a fi
 
 ## Contributing
 If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
+
+## License
+See LICENSE.

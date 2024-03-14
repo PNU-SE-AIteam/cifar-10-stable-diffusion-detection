@@ -2,7 +2,7 @@
 ### This repository contains a Python script for training a convolutional neural network (CNN) to classify images from the CiFake dataset as either real or AI-generated synthetic images.
 
 ## Dataset
-### The CiFake dataset is available at /kaggle/input/cifake-real-and-ai-generated-synthetic-images/. It contains two directories, train and test, each containing subdirectories with real and synthetic images.
+### The CiFake dataset is available at [/kaggle/input/cifake-real-and-ai-generated-synthetic-images/](https://www.kaggle.com/datasets/birdy654/cifake-real-and-ai-generated-synthetic-images). It contains two directories, train and test, each containing subdirectories with real and synthetic images.
 
 ## Requirements
 ### The following libraries and modules are required to run the script:

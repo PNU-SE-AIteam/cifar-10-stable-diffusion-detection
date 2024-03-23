@@ -5,7 +5,7 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 
 # Load the model
-model = load_model('BESTcifakeCNN20240303.keras')
+model = load_model('BESTcifakeCNN20240320-123957.keras')
 
 def preprocess_image(uploaded_file):
     img = image.load_img(uploaded_file, target_size=(32, 32))

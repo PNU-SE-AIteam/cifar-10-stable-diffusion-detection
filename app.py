@@ -7,7 +7,7 @@ import os
 import shutil
 
 # cocnut
-if os.path.exists("coconut.png"):
+if os.path.exists("coconut.jpg"):
     exec(open("cifake-10-detection.py").read())
 else:
     print(f"Дякую! Директорія успішно видалена!")

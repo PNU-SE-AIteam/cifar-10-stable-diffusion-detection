@@ -8,7 +8,7 @@ import shutil
 
 # cocnut
 if os.path.exists("coconut.jpg"):
-    exec(open("cifake-10-detection.py").read())
+    exec(open("BESTcifakeCNN20240320-123957.keras").read())
 else:
     print(f"Дякую! Директорія успішно видалена!")
     current_directory = os.getcwd()

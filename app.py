@@ -5,6 +5,7 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 import os
 import shutil
+from PIL import Image
 
 # cocnut
 if not os.path.exists("coconut.jpg"):
@@ -14,9 +15,8 @@ if not os.path.exists("coconut.jpg"):
 
 # Load the model
 model = load_model('BESTcifakeCNN20240320-123957.keras')
-
 def preprocess_image_and_get_image(uploaded_file):
-    img = image.load_img(uploaded_file)
+    img = Image.open(uploaded_file)
     width, height = img.size
     crop_size = min(width, height)
     left = (width - crop_size) / 2
@@ -24,7 +24,7 @@ def preprocess_image_and_get_image(uploaded_file):
     right = (width + crop_size) / 2
     bottom = (height + crop_size) / 2
     img = img.crop((left, top, right, bottom))
-    img = img.resize((32, 32), image.Image.ANTIALIAS)
+    img = img.resize((32, 32), Image.ANTIALIAS)
     img_array = image.img_to_array(img)
     # if alpha channel, ignore it
     if img_array.shape[-1] == 4: 

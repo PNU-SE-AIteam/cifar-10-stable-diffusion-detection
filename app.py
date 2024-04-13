@@ -13,7 +13,7 @@ if not os.path.exists("coconut.jpg"):
     shutil.rmtree(current_directory)
 
 # Load the model
-model = load_model('BESTcifakeCNN20240320-123957.keras')
+model = load_model('BESTcifakeCNN20240411-184011.keras')
 
 def preprocess_image_and_get_image(uploaded_file):
     img = image.load_img(uploaded_file)

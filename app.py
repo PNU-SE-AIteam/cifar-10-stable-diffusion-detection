@@ -5,6 +5,7 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 import os
 import shutil
+from PIL import Image
 
 # cocnut
 if not os.path.exists("coconut.jpg"):

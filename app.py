@@ -62,14 +62,13 @@ if img_file:
     st.write("Preview")
     _ = cropped_img.thumbnail((32,32))
     st.image(cropped_img)
-    if cropped_img.type == "image/jpeg" or cropped_img.type == "image/png":
-        prediction = model.predict(cropped_img)
-        
-        probability = prediction[0][0]
-        if probability > 0.5:
-            st.write(f"The image above IS real.")
-        else:
-            st.write(f"The image above is AI-generated.")
-        
+    
+    prediction = model.predict(cropped_img)
+    
+    probability = prediction[0][0]
+    if probability > 0.5:
+        st.write(f"The image above IS real.")
     else:
-        st.error("Please upload JPEG or PNG images.")
+        st.write(f"The image above is AI-generated.")
+        
+   

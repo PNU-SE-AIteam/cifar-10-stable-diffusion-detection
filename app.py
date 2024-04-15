@@ -6,6 +6,7 @@ import numpy as np
 import os
 import shutil
 from PIL import Image
+from streamlit_cropper import st_cropper
 
 # cocnut
 if not os.path.exists("coconut.jpg"):
@@ -39,33 +40,36 @@ def preprocess_image_and_get_image(uploaded_file, crop_type, custom_crop=None):
 
 st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10)")
-uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
+# uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
+img_file = st.sidebar.file_uploader(label='Upload a file', type=['png', 'jpg'])
+realtime_update = st.sidebar.checkbox(label="Update in Real Time", value=True)
+box_color = st.sidebar.color_picker(label="Box Color", value='#0000FF')
+aspect_choice = st.sidebar.radio(label="Aspect Ratio", options=["1:1"])
+aspect_dict = {
+    "1:1": (1, 1)
+}
+aspect_ratio = aspect_dict[aspect_choice]
 
-# Add a select box for cropping options
-crop_type = st.selectbox('Select cropping option:', ('middle', 'custom'))
-
-if crop_type == 'custom':
-    # Input fields for custom crop area
-    left = st.number_input('Left', min_value=0, value=0)
-    top = st.number_input('Top', min_value=0, value=0)
-    right = st.number_input('Right', min_value=0, value=32)
-    bottom = st.number_input('Bottom', min_value=0, value=32)
-    custom_crop = (left, top, right, bottom)
-else:
-    custom_crop = None
-
-if uploaded_files is not None:
-    for uploaded_file in uploaded_files:
-        if uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/png":
-            img_array, img = preprocess_image_and_get_image(uploaded_file, crop_type, custom_crop)
-            prediction = model.predict(img_array)
-            
-            probability = prediction[0][0]
-            if probability > 0.5:
-                st.write(f"The image below IS real.")
-            else:
-                st.write(f"The image below is AI-generated.")
-            
-            st.image(img, caption="32x32 Image", width=100)
+if img_file:
+    img = Image.open(img_file)
+    if not realtime_update:
+        st.write("Double click to save crop")
+    # Get a cropped image from the frontend
+    cropped_img = st_cropper(img, realtime_update=realtime_update, box_color=box_color,
+                                aspect_ratio=aspect_ratio)
+    
+    # Manipulate cropped image at will
+    st.write("Preview")
+    _ = cropped_img.thumbnail((32,32))
+    st.image(cropped_img)
+    if cropped_img.type == "image/jpeg" or cropped_img.type == "image/png":
+        prediction = model.predict(cropped_img)
+        
+        probability = prediction[0][0]
+        if probability > 0.5:
+            st.write(f"The image above IS real.")
         else:
-            st.error("Please upload JPEG or PNG images.")
+            st.write(f"The image above is AI-generated.")
+        
+    else:
+        st.error("Please upload JPEG or PNG images.")

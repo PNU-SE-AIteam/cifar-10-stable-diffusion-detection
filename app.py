@@ -42,7 +42,6 @@ st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10)")
 # uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
 img_file = st.sidebar.file_uploader(label='Upload a file', type=['png', 'jpg'])
-realtime_update = st.sidebar.checkbox(label="Update in Real Time", value=True)
 box_color = st.sidebar.color_picker(label="Box Color", value='#0000FF')
 aspect_choice = st.sidebar.radio(label="Aspect Ratio", options=["1:1"])
 aspect_dict = {
@@ -52,10 +51,10 @@ aspect_ratio = aspect_dict[aspect_choice]
 
 if img_file:
     img = Image.open(img_file)
-    if not realtime_update:
-        st.write("Double click to save crop")
+
+    st.write("Double click to save crop")
     # Get a cropped image from the frontend
-    cropped_img = st_cropper(img, realtime_update=realtime_update, box_color=box_color,
+    cropped_img = st_cropper(img, realtime_update=False, box_color=box_color,
                                 aspect_ratio=aspect_ratio)
     
     # Manipulate cropped image at will

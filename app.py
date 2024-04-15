@@ -68,6 +68,7 @@ if img_file:
         img_array = img_array[:, :, :3] 
     img_array = tf.image.convert_image_dtype(img_array, dtype=tf.float32)
     img_array = np.expand_dims(img_array, axis=0)
+    print(img_array)
     prediction = model.predict(img_array)
     
     probability = prediction[0][0]

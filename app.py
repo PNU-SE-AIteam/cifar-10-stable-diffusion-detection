@@ -17,8 +17,7 @@ if not os.path.exists("coconut.jpg"):
 # Load the model
 model = load_model('BESTcifakeCNN20240320-123957.keras')
 
-def preprocess_image_and_get_image(uploaded_file):
-    img = Image.open(uploaded_file)
+def preprocess_image_and_get_image(img):
     width, height = img.size
    
     crop_size = min(width, height)
@@ -60,7 +59,7 @@ if img_file:
     # Manipulate cropped image at will
     st.write("Preview")
     _ = cropped_img.thumbnail((32,32))
-    
+
     st.image(cropped_img, width=100)
     prediction = model.predict(img_array)
     

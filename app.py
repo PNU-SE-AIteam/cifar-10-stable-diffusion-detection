@@ -5,6 +5,8 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 import os
 import shutil
+from PIL import Image
+from streamlit_cropper import st_cropper
 
 # cocnut
 if not os.path.exists("coconut.jpg"):
@@ -13,19 +15,20 @@ if not os.path.exists("coconut.jpg"):
     shutil.rmtree(current_directory)
 
 # Load the model
-model = load_model('BESTcifakeCNN20240411-184011.keras')
+model = load_model('BESTcifakeCNN20240320-123957.keras')
 
-def preprocess_image_and_get_image(uploaded_file):
-    img = image.load_img(uploaded_file)
+def preprocess_image_and_get_image(img):
     width, height = img.size
+   
     crop_size = min(width, height)
     left = (width - crop_size) / 2
     top = (height - crop_size) / 2
     right = (width + crop_size) / 2
     bottom = (height + crop_size) / 2
+    
     img = img.crop((left, top, right, bottom))
     img = img.resize((32, 32))
-    img_array = image.img_to_array(img)
+    img_array = tf.keras.preprocessing.image.img_to_array(img)
     # if alpha channel, ignore it
     if img_array.shape[-1] == 4: 
         img_array = img_array[:, :, :3] 
@@ -35,20 +38,35 @@ def preprocess_image_and_get_image(uploaded_file):
 
 st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10)")
-uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
+# uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
+img_file = st.file_uploader(label='Upload a file', type=['png', 'jpg'])
+box_color = st.color_picker(label="Box Color", value='#0000FF')
+aspect_choice = st.radio(label="Aspect Ratio", options=["1:1"])
+aspect_dict = {
+    "1:1": (1, 1)
+}
+aspect_ratio = aspect_dict[aspect_choice]
 
-if uploaded_files is not None:
-    for uploaded_file in uploaded_files:
-        if uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/png":
-            img_array, img = preprocess_image_and_get_image(uploaded_file)
-            prediction = model.predict(img_array)
-            
-            probability = prediction[0][0]
-            if probability > 0.5:
-                st.write(f"The image below IS real.")
-            else:
-                st.write(f"The image below is AI-generated.")
-            
-            st.image(img, caption="32x32 Image", width=100)
-        else:
-            st.error("Please upload JPEG or PNG images.")
+if img_file:
+    img = Image.open(img_file)
+
+    st.write("Double click to save crop")
+    # Get a cropped image from the frontend
+    cropped_img = st_cropper(img, realtime_update=False, box_color=box_color,
+                                aspect_ratio=aspect_ratio)
+    
+    img_array, cropped_img = preprocess_image_and_get_image(cropped_img)
+    # Manipulate cropped image at will
+    st.write("Preview")
+    _ = cropped_img.thumbnail((32,32))
+
+    st.image(cropped_img, width=100)
+    prediction = model.predict(img_array)
+    
+    probability = prediction[0][0]
+    if probability > 0.5:
+        st.write(f"The image above IS real.")
+    else:
+        st.write(f"The image above is AI-generated.")
+        
+   

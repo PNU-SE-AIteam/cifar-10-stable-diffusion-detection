@@ -17,26 +17,26 @@ if not os.path.exists("coconut.jpg"):
 # Load the model
 model = load_model('BESTcifakeCNN20240411-184011.keras')
 
-def preprocess_image_and_get_image(uploaded_file, crop_type, custom_crop=None):
-    img = Image.open(uploaded_file)
-    width, height = img.size
-    if crop_type == 'middle':
-        crop_size = min(width, height)
-        left = (width - crop_size) / 2
-        top = (height - crop_size) / 2
-        right = (width + crop_size) / 2
-        bottom = (height + crop_size) / 2
-    elif crop_type == 'custom':
-        left, top, right, bottom = custom_crop
-    img = img.crop((left, top, right, bottom))
-    img = img.resize((32, 32))
-    img_array = tf.keras.preprocessing.image.img_to_array(img)
-    # if alpha channel, ignore it
-    if img_array.shape[-1] == 4: 
-        img_array = img_array[:, :, :3] 
-    img_array = tf.image.convert_image_dtype(img_array, dtype=tf.float32)
-    img_array = np.expand_dims(img_array, axis=0)
-    return img_array, img 
+# def preprocess_image_and_get_image(uploaded_file, crop_type, custom_crop=None):
+#     img = Image.open(uploaded_file)
+#     width, height = img.size
+#     if crop_type == 'middle':
+#         crop_size = min(width, height)
+#         left = (width - crop_size) / 2
+#         top = (height - crop_size) / 2
+#         right = (width + crop_size) / 2
+#         bottom = (height + crop_size) / 2
+#     elif crop_type == 'custom':
+#         left, top, right, bottom = custom_crop
+#     img = img.crop((left, top, right, bottom))
+#     img = img.resize((32, 32))
+#     img_array = tf.keras.preprocessing.image.img_to_array(img)
+#     # if alpha channel, ignore it
+#     if img_array.shape[-1] == 4: 
+#         img_array = img_array[:, :, :3] 
+#     img_array = tf.image.convert_image_dtype(img_array, dtype=tf.float32)
+#     img_array = np.expand_dims(img_array, axis=0)
+#     return img_array, img 
 
 st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10)")
@@ -63,7 +63,13 @@ if img_file:
     _ = cropped_img.thumbnail((32,32))
     st.image(cropped_img)
     
-    prediction = model.predict(cropped_img)
+    img_array = tf.keras.preprocessing.image.img_to_array(cropped_img)
+    # if alpha channel, ignore it
+    if img_array.shape[-1] == 4: 
+        img_array = img_array[:, :, :3] 
+    img_array = tf.image.convert_image_dtype(img_array, dtype=tf.float32)
+    img_array = np.expand_dims(img_array, axis=0)
+    prediction = model.predict(img_array)
     
     probability = prediction[0][0]
     if probability > 0.5:

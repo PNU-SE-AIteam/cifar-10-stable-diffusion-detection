@@ -60,7 +60,7 @@ if img_file:
     # Manipulate cropped image at will
     st.write("Preview")
     _ = cropped_img.thumbnail((32,32))
-    st.image(cropped_img)
+    st.image(cropped_img, width=100)
     
     img_array = tf.keras.preprocessing.image.img_to_array(cropped_img)
     # if alpha channel, ignore it

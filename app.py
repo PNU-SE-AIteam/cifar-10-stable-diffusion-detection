@@ -3,27 +3,17 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
-import os
+import os 
 import shutil
-
-# cocnut
-if not os.path.exists("coconut.jpg"):
-    print(f"Дякую! Директорія успішно видалена!")
-    current_directory = os.getcwd()
-    shutil.rmtree(current_directory)
 
 # Load the model
 model = load_model('BESTcifakeCNN20240411-184011.keras')
 
-def preprocess_image_and_get_image(uploaded_file):
+def preprocess_image_and_get_image(uploaded_file, crop_area):
     img = image.load_img(uploaded_file)
     width, height = img.size
-    crop_size = min(width, height)
-    left = (width - crop_size) / 2
-    top = (height - crop_size) / 2
-    right = (width + crop_size) / 2
-    bottom = (height + crop_size) / 2
-    img = img.crop((left, top, right, bottom))
+    left, top, right, bottom = crop_area
+    img = img.crop((left * width, top * height, right * width, bottom * height))
     img = img.resize((32, 32))
     img_array = image.img_to_array(img)
     # if alpha channel, ignore it
@@ -40,7 +30,9 @@ uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "
 if uploaded_files is not None:
     for uploaded_file in uploaded_files:
         if uploaded_file.type == "image/jpeg" or uploaded_file.type == "image/png":
-            img_array, img = preprocess_image_and_get_image(uploaded_file)
+            # Add crop functionality
+            left, top, right, bottom = st.sidebar.slider("Crop Area", 0.0, 1.0, (0.0, 1.0), 0.05)
+            img_array, img = preprocess_image_and_get_image(uploaded_file, (left, top, right, bottom))
             prediction = model.predict(img_array)
             
             probability = prediction[0][0]

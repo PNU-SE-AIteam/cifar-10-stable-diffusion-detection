@@ -41,9 +41,9 @@ model = load_model('BESTcifakeCNN20240320-123957.keras')
 st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10)")
 # uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
-img_file = st.sidebar.file_uploader(label='Upload a file', type=['png', 'jpg'])
-box_color = st.sidebar.color_picker(label="Box Color", value='#0000FF')
-aspect_choice = st.sidebar.radio(label="Aspect Ratio", options=["1:1"])
+img_file = st.file_uploader(label='Upload a file', type=['png', 'jpg'])
+box_color = st.color_picker(label="Box Color", value='#0000FF')
+aspect_choice = st.radio(label="Aspect Ratio", options=["1:1"])
 aspect_dict = {
     "1:1": (1, 1)
 }

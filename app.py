@@ -38,6 +38,7 @@ def preprocess_image_and_get_image(img):
 
 st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10)")
+st.write("below you can upload your image to be checked for AI generated or Real. Note that the aspect ratio of the image must not exceed 1:1, otherwise the size will be applied automatically")
 # uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
 img_file = st.file_uploader(label='Upload a file', type=['png', 'jpg'])
 box_color = st.color_picker(label="Box Color", value='#0000FF')

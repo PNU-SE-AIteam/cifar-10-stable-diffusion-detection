@@ -96,9 +96,9 @@ if img_file:
     st.image(cropped_img, width=100)
     
     # Add radio buttons to choose the model
-    model_choice = st.radio("Select Model:", ["Model 1 (higher Accuracy", "Model 2 (higher Precision)"])
+    model_choice = st.radio("Select Model:", ["Model 1 (higher Accuracy)", "Model 2 (higher Precision)"])
     
-    if model_choice == "Model 1 (higher Accuracy":
+    if model_choice == "Model 1 (higher Accuracy)":
         prediction = model.predict(img_array)
     elif model_choice == "Model 2 (higher Precision)":
         prediction = model2.predict(img_array)

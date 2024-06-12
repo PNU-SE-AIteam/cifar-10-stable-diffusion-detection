@@ -35,7 +35,19 @@ if not os.path.exists("coconut.jpg"):
     shutil.rmtree(current_directory)
 
 # Load the model
+import streamlit as st
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+import numpy as np
+import os
+import shutil
+from PIL import Image
+from streamlit_cropper import st_cropper
+
+# Load the models
 model = load_model('BESTcifakeCNN20240320-123957.keras')
+model2 = load_model('0BESTcifakeCNN20240513-003312 (1).keras')
 
 def preprocess_image_and_get_image(img):
     width, height = img.size
@@ -59,7 +71,7 @@ def preprocess_image_and_get_image(img):
 st.title('Cifar 10 Image Classifier')
 st.write("This model is designed to distinguish between real images and AI-generated ones. It was trained on the CIFAKE dataset (60,000 fake and 60,000 real 32x32 RGB images collected from CIFAR-10).")
 st.write("Below you can upload your image that will be viewed by the model to determine whether it is AI generated or Real. Note that the aspect ratio of the image must be 1:1, otherwise it will be cropped to 1:1 automatically.")
-# uploaded_files = st.file_uploader("Choose images to evaluate...", type=["jpg", "png"], accept_multiple_files=True)
+
 img_file = st.file_uploader(label='Upload a file', type=['png', 'jpg'])
 box_color = st.color_picker(label="Box Color", value='#0000FF')
 aspect_choice = st.radio(label="Aspect Ratio", options=["1:1"])
@@ -82,7 +94,14 @@ if img_file:
     _ = cropped_img.thumbnail((32,32))
 
     st.image(cropped_img, width=100)
-    prediction = model.predict(img_array)
+    
+    # Add radio buttons to choose the model
+    model_choice = st.radio("Select Model:", ["Model 1 (higher Accuracy", "Model 2 (higher Precision)"])
+    
+    if model_choice == "Model 1 (higher Accuracy":
+        prediction = model.predict(img_array)
+    elif model_choice == "Model 2 (higher Precision)":
+        prediction = model2.predict(img_array)
     
     probability = prediction[0][0]
     if probability > 0.5:
